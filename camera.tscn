@@ -1,0 +1,151 @@
+[gd_scene load_steps=15 format=3 uid="uid://dhna55uewp5kr"]
+
+[ext_resource type="Script" path="res://camera.gd" id="1_cj81h"]
+[ext_resource type="Script" path="res://aim_raycast.gd" id="2_ksvro"]
+[ext_resource type="Texture2D" uid="uid://kpp5tvhw17b2" path="res://circle-vector-png-4.png" id="2_o1vwr"]
+[ext_resource type="Texture2D" uid="uid://b3pc5x1iird1r" path="res://image_processing20210706-12803-1ojfd5v.png" id="2_sck36"]
+[ext_resource type="Texture2D" uid="uid://b2smb4t1mos4v" path="res://image_processing20210706-12803-1vtpk02.png" id="4_1hmdp"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_vo25c"]
+blend_mode = 1
+light_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_vax7j"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ofvgc"]
+blend_mode = 1
+
+[sub_resource type="SphereMesh" id="SphereMesh_4pf2e"]
+radius = 0.063
+height = 0.125
+radial_segments = 7
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yba3g"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0, 1, 0, 0.690196)
+disable_receive_shadows = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k3per"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.490196)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xt5oh"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_rv0d0"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_dtfrd"]
+radius = 0.125
+height = 0.25
+
+[node name="Camera" type="Node3D" node_paths=PackedStringArray("camera_target", "camera", "shoot_start_point")]
+script = ExtResource("1_cj81h")
+camera_target = NodePath("CameraTarget")
+camera = NodePath("CameraTarget/Camera3D")
+shoot_start_point = NodePath("CameraTarget/Camera3D/Shoot Start Point")
+
+[node name="CameraTarget" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraTarget"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.5)
+fov = 65.0
+
+[node name="TextureRect" type="TextureRect" parent="CameraTarget/Camera3D"]
+material = SubResource("CanvasItemMaterial_vo25c")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -577.0
+offset_top = -323.0
+offset_right = 579.0
+offset_bottom = 325.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+expand_mode = 2
+stretch_mode = 3
+
+[node name="ImageProcessing20210706-12803-1Ojfd5v" type="Sprite2D" parent="CameraTarget/Camera3D/TextureRect"]
+material = SubResource("CanvasItemMaterial_vax7j")
+position = Vector2(577, 323)
+scale = Vector2(0.015, 0.015)
+texture = ExtResource("2_sck36")
+
+[node name="ImageProcessing20210706-12803-1Ojfd5v2" type="Sprite2D" parent="CameraTarget/Camera3D/TextureRect"]
+material = SubResource("CanvasItemMaterial_ofvgc")
+position = Vector2(577, 323)
+scale = Vector2(0.013, 0.013)
+texture = ExtResource("2_sck36")
+
+[node name="ImageProcessing20210706-12803-1Vtpk02" type="Sprite2D" parent="CameraTarget/Camera3D/TextureRect"]
+visible = false
+position = Vector2(577, 323)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("4_1hmdp")
+
+[node name="Circle-vector-png-4" type="Sprite2D" parent="CameraTarget/Camera3D/TextureRect"]
+visible = false
+position = Vector2(577, 323)
+scale = Vector2(0.012, 0.012)
+texture = ExtResource("2_o1vwr")
+
+[node name="Aim Raycast" type="RayCast3D" parent="CameraTarget/Camera3D" node_paths=PackedStringArray("camera_parent")]
+target_position = Vector3(0, 0, -100)
+collision_mask = 3
+script = ExtResource("2_ksvro")
+camera_parent = NodePath("../../..")
+
+[node name="AimPositioner" type="Node3D" parent="CameraTarget/Camera3D/Aim Raycast"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)
+
+[node name="AimTarget" type="Node3D" parent="CameraTarget/Camera3D/Aim Raycast/AimPositioner"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CameraTarget/Camera3D/Aim Raycast/AimPositioner/AimTarget"]
+visible = false
+mesh = SubResource("SphereMesh_4pf2e")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_yba3g")
+
+[node name="AimRememberer" type="MeshInstance3D" parent="CameraTarget/Camera3D/Aim Raycast"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.5)
+top_level = true
+visible = false
+material_override = SubResource("StandardMaterial3D_k3per")
+mesh = SubResource("BoxMesh_xt5oh")
+
+[node name="Shoot Start Point" type="Node3D" parent="CameraTarget/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.9)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CameraTarget/Camera3D/Shoot Start Point"]
+transform = Transform3D(0.5, 0, 0, 0, -0.0133502, 0.499822, 0, -0.499822, -0.0133502, 0, 0, 0)
+visible = false
+mesh = SubResource("PrismMesh_rv0d0")
+
+[node name="RayCast3D" type="RayCast3D" parent="CameraTarget/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+target_position = Vector3(0, 0, -100)
+collision_mask = 3
+
+[node name="RayCast3D2" type="RayCast3D" parent="CameraTarget/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, 0, -100)
+collision_mask = 3
+
+[node name="RayCast3D3" type="RayCast3D" parent="CameraTarget/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+target_position = Vector3(0, 0, -100)
+collision_mask = 3
+
+[node name="RayCast3D4" type="RayCast3D" parent="CameraTarget/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+target_position = Vector3(0, 0, -100)
+collision_mask = 3
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("SphereMesh_dtfrd")

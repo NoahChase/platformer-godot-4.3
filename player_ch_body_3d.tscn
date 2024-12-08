@@ -1,0 +1,194 @@
+[gd_scene load_steps=17 format=3 uid="uid://hf6ab34vhwln"]
+
+[ext_resource type="Script" path="res://player_ch_body_3d.gd" id="1_msgir"]
+[ext_resource type="PackedScene" uid="uid://o0k3vl84luf5" path="res://gun.tscn" id="2_bd1ip"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_eot0l"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5nl5k"]
+albedo_color = Color(0.739781, 0, 0.221085, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_kqgvy"]
+radius = 0.125
+height = 0.25
+radial_segments = 5
+rings = 3
+
+[sub_resource type="SphereMesh" id="SphereMesh_s5q5t"]
+radius = 0.125
+height = 0.25
+radial_segments = 7
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yy12m"]
+distance_fade_mode = 1
+distance_fade_min_distance = 1.0
+distance_fade_max_distance = 1.15
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ui0op"]
+radial_segments = 7
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkoyf"]
+distance_fade_mode = 1
+distance_fade_min_distance = 1.21
+distance_fade_max_distance = 1.26
+
+[sub_resource type="BoxMesh" id="BoxMesh_nk7lk"]
+size = Vector3(0.1, 0.1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2ia54"]
+distance_fade_mode = 1
+distance_fade_min_distance = 1.21
+distance_fade_max_distance = 1.26
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yka2v"]
+distance_fade_mode = 1
+distance_fade_min_distance = 2.0
+distance_fade_max_distance = 2.05
+
+[sub_resource type="PrismMesh" id="PrismMesh_h4pne"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m1xb8"]
+size = Vector3(2.75, 3, 2.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tvo1v"]
+shading_mode = 0
+albedo_color = Color(0.809822, 0.700523, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_j33b4"]
+radius = 0.125
+height = 0.25
+radial_segments = 4
+rings = 1
+is_hemisphere = true
+
+[node name="Player CH Body3D" type="CharacterBody3D" groups=["player"]]
+floor_max_angle = 1.23918
+floor_snap_length = 1.0
+script = ExtResource("1_msgir")
+
+[node name="To Cam RayCast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+target_position = Vector3(0, 0, -10)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_eot0l")
+
+[node name="Cam Y Ray" type="RayCast3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+target_position = Vector3(0, -1000, 0)
+
+[node name="Basis_Offset" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_5nl5k")
+mesh = SubResource("SphereMesh_kqgvy")
+
+[node name="Body Mesh Container" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Basis Shoulder Offset" type="MeshInstance3D" parent="Body Mesh Container"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.6, 0)
+visible = false
+mesh = SubResource("SphereMesh_s5q5t")
+
+[node name="Capsule" type="MeshInstance3D" parent="Body Mesh Container"]
+material_override = SubResource("StandardMaterial3D_yy12m")
+mesh = SubResource("CapsuleMesh_ui0op")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Body Mesh Container"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.808179, 0.217731, -0.00376523)
+material_override = SubResource("StandardMaterial3D_wkoyf")
+mesh = SubResource("BoxMesh_nk7lk")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Body Mesh Container"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.808179, 0.217731, -0.00376516)
+material_override = SubResource("StandardMaterial3D_2ia54")
+mesh = SubResource("BoxMesh_nk7lk")
+
+[node name="nose" type="MeshInstance3D" parent="Body Mesh Container"]
+transform = Transform3D(-0.999999, -8.74227e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74227e-08, -0.999999, 4.37113e-08, 0.0248905, 0.329224, -0.594659)
+visible = false
+material_override = SubResource("StandardMaterial3D_yka2v")
+mesh = SubResource("PrismMesh_h4pne")
+
+[node name="RayCast3D" type="RayCast3D" parent="Body Mesh Container"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+target_position = Vector3(0, 0, -3)
+
+[node name="Area3D" type="Area3D" parent="Body Mesh Container"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body Mesh Container/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -0.9)
+shape = SubResource("BoxShape3D_m1xb8")
+
+[node name="Ledge Grab Ray" type="RayCast3D" parent="Body Mesh Container"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, 0, -1)
+
+[node name="Ledge Check Ray" type="RayCast3D" parent="Body Mesh Container"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, -0.5)
+target_position = Vector3(0, 0, -1)
+
+[node name="gun" parent="Body Mesh Container" node_paths=PackedStringArray("player") instance=ExtResource("2_bd1ip")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.45058e-09, 0.25, -0.95)
+player = NodePath("../..")
+
+[node name="Ray V Holder" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Ray V" type="RayCast3D" parent="Ray V Holder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -1)
+target_position = Vector3(0, -4, 0)
+
+[node name="movetonode" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.55)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="movetonode"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.25, 0)
+material_override = SubResource("StandardMaterial3D_tvo1v")
+mesh = SubResource("SphereMesh_j33b4")
+
+[node name="Look_At Rotation" type="Node3D" parent="."]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_left = 756.0
+offset_top = 612.0
+offset_right = 1160.0
+offset_bottom = 812.0
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+offset_left = -1.0
+offset_top = 518.0
+offset_right = 403.0
+offset_bottom = 718.0
+fit_content = true
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="."]
+offset_left = -1.0
+offset_top = 462.0
+offset_right = 403.0
+offset_bottom = 662.0
+fit_content = true
+
+[node name="Downward RayCast" type="RayCast3D" parent="."]
+target_position = Vector3(0, -5, 0)
+
+[node name="Jump Timed" type="Timer" parent="."]
+one_shot = true
+
+[node name="Air Timed" type="Timer" parent="."]
+
+[node name="Dash Timed" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="Body Mesh Container/Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Body Mesh Container/Area3D" to="." method="_on_area_3d_body_exited"]

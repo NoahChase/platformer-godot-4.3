@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://ckt3u5mm2iq6x"]
+
+[ext_resource type="PackedScene" uid="uid://dhna55uewp5kr" path="res://camera.tscn" id="1_wotb8"]
+[ext_resource type="PackedScene" uid="uid://hf6ab34vhwln" path="res://player_ch_body_3d.tscn" id="2_hymie"]
+
+[sub_resource type="Environment" id="Environment_70i5t"]
+background_mode = 1
+ambient_light_source = 2
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tw1ro"]
+noise_type = 4
+frequency = 0.1
+fractal_gain = 1.18
+domain_warp_amplitude = 56.03
+domain_warp_frequency = 0.61
+domain_warp_fractal_type = 2
+domain_warp_fractal_octaves = 10
+domain_warp_fractal_lacunarity = 14.56
+domain_warp_fractal_gain = 17.37
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_t7mef"]
+width = 4096
+height = 4096
+noise = SubResource("FastNoiseLite_tw1ro")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ih7al"]
+albedo_texture = SubResource("NoiseTexture2D_t7mef")
+albedo_texture_force_srgb = true
+metallic_specular = 0.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_t5lip"]
+size = Vector2(20, 20)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_t1t87"]
+data = PackedVector3Array(10, -10, 0, -10, -10, 0, 10, 10, 0, -10, -10, 0, -10, 10, 0, 10, 10, 0)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_70i5t")
+
+[node name="floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_ih7al")
+mesh = SubResource("QuadMesh_t5lip")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_t1t87")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 0)
+light_color = Color(1, 0.8785, 0.73, 1)
+spot_range = 7.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+light_color = Color(0, 0, 0, 1)
+
+[node name="Camera" parent="." node_paths=PackedStringArray("camera_player") instance=ExtResource("1_wotb8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
+camera_player = NodePath("../Player CH Body3D")
+
+[node name="Player CH Body3D" parent="." node_paths=PackedStringArray("camera_parent") instance=ExtResource("2_hymie")]
+camera_parent = NodePath("../Camera")

@@ -1,0 +1,77 @@
+[gd_scene load_steps=9 format=3 uid="uid://o0k3vl84luf5"]
+
+[ext_resource type="Script" path="res://gun.gd" id="1_eoyx4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_6wx7q"]
+size = Vector3(0.1, 0.25, 0.5)
+
+[sub_resource type="Animation" id="Animation_stlxd"]
+resource_name = "no reset"
+
+[sub_resource type="Animation" id="Animation_bg3fp"]
+resource_name = "reset"
+
+[sub_resource type="Animation" id="Animation_ia6wj"]
+resource_name = "shoot"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_m3q1g"]
+_data = {
+"no reset": SubResource("Animation_stlxd"),
+"reset": SubResource("Animation_bg3fp"),
+"shoot": SubResource("Animation_ia6wj")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5lft2"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 1, 0, 0.364706)
+billboard_mode = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_b0c4n"]
+size = Vector3(0.05, 0.05, 0.05)
+
+[node name="gun" type="Node3D"]
+script = ExtResource("1_eoyx4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, -9.68575e-08, 0, 1, 0, 9.68575e-08, 0, -1, 0, 0, 0)
+mesh = SubResource("BoxMesh_6wx7q")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 2.42144e-08, -8.9407e-08, -2.59744e-09, 0.961262, 0.275637, 9.68575e-08, 0.275637, -0.961262, 2.42144e-08, -0.07, 0.25)
+mesh = SubResource("BoxMesh_6wx7q")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_m3q1g")
+}
+
+[node name="muzzle" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, -9.68575e-08, 0, 1, 0, 9.68575e-08, 0, -1, -2.42144e-08, 0, -0.25)
+
+[node name="RayCast3D" type="RayCast3D" parent="muzzle"]
+target_position = Vector3(0, 0, 100)
+collision_mask = 3
+debug_shape_custom_color = Color(0.493545, 0.493546, 0.493546, 1)
+
+[node name="AimPositioner" type="Node3D" parent="muzzle/RayCast3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 100)
+
+[node name="AimTarget" type="Node3D" parent="muzzle/RayCast3D/AimPositioner"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="muzzle/RayCast3D/AimPositioner/AimTarget"]
+material_override = SubResource("StandardMaterial3D_5lft2")
+mesh = SubResource("BoxMesh_b0c4n")
+
+[node name="RayCast3D2" type="RayCast3D" parent="muzzle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+target_position = Vector3(0, 0, 100)
+
+[node name="RayCast3D3" type="RayCast3D" parent="muzzle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
+target_position = Vector3(0, 0, 100)
+
+[node name="RayCast3D4" type="RayCast3D" parent="muzzle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
+target_position = Vector3(0, 0, 100)
